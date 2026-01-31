@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Candidato {
+  id                    Int      @id @default(autoincrement())
+  nome                  String
+  cidade_bairro         String
+  idade                 String
+  instagram             String?
+  
+  // Pergunta 5
+  tem_outros_negocios   String
+  quais_negocios        String?
+  
+  // Pergunta 6
+  atuacao_negocio       String
+  
+  // Pergunta 7
+  valor_investimento    String
+  
+  // Pergunta 8
+  restricao_cpf         String
+  
+  // Pergunta 9
+  disponivel_contrato   String
+  
+  // Pergunta 10
+  tem_experiencia       String
+  descricao_experiencia String?
+  
+  // Pergunta 11
+  motivacao             String
+  
+  // Pergunta 12
+  perfil_socio          String
+  
+  // Pergunta 13
+  aceita_processos      String
+  
+  createdAt             DateTime @default(now())
+}
