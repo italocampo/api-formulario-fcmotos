@@ -15,7 +15,7 @@ model Candidato {
   instagram             String?
   
   // Pergunta 5
-  tem_outros_negocios   String
+  tem_outros_negocios   String?
   quais_negocios        String?
   
   // Pergunta 6

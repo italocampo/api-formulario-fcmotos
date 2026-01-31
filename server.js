@@ -7,27 +7,34 @@ const prisma = new PrismaClient();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Configurações
-app.use(cors()); // Permite que o Frontend converse com o Backend
+app.use(cors());
 app.use(bodyParser.json());
 
-// Rota de Teste (Para saber se o servidor está on)
 app.get('/', (req, res) => {
   res.send('API da FC Motos está rodando! 🏍️');
 });
 
-// Rota para Salvar o Formulário
 app.post('/api/candidatos', async (req, res) => {
   try {
     const dados = req.body;
 
-    // Salva no Banco de Dados usando Prisma
+    // 1. Validação Manual de Campos Obrigatórios
+    const camposObrigatorios = ['nome', 'cidade_bairro', 'idade', 'valor_investimento', 'restricao_cpf', 'disponivel_contrato'];
+    const camposFaltantes = camposObrigatorios.filter(campo => !dados[campo]);
+
+    if (camposFaltantes.length > 0) {
+      return res.status(400).json({ 
+        error: `Faltam dados obrigatórios: ${camposFaltantes.join(', ')}` 
+      });
+    }
+
+    // 2. Salva no Banco
     const novoCandidato = await prisma.candidato.create({
       data: {
         nome: dados.nome,
         cidade_bairro: dados.cidade_bairro,
         idade: dados.idade,
-        instagram: dados.instagram,
+        instagram: dados.instagram || null, // Garante nulo se vier vazio
         tem_outros_negocios: dados.tem_outros_negocios,
         quais_negocios: dados.quais_negocios,
         atuacao_negocio: dados.atuacao_negocio,
@@ -42,16 +49,15 @@ app.post('/api/candidatos', async (req, res) => {
       }
     });
 
-    console.log("Novo cadastro recebido:", novoCandidato.nome);
-    res.status(201).json({ message: 'Cadastro realizado com sucesso!', id: novoCandidato.id });
+    console.log("Novo cadastro:", novoCandidato.nome);
+    res.status(201).json({ message: 'Sucesso!', id: novoCandidato.id });
 
   } catch (error) {
-    console.error("Erro ao salvar:", error);
-    res.status(500).json({ error: 'Erro ao salvar os dados. Tente novamente.' });
+    console.error("Erro no servidor:", error);
+    res.status(500).json({ error: 'Erro interno ao salvar.' });
   }
 });
 
-// Inicia o Servidor
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
