@@ -79,6 +79,25 @@ app.post('/api/candidatos', async (req, res) => {
   }
 });
 
+// =====================================================
+// NOVA ROTA: DELETAR UM CANDIDATO PELO ID
+// =====================================================
+app.delete('/api/candidatos/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Converte o ID para número e manda o Prisma deletar
+    await prisma.candidato.delete({
+      where: { id: parseInt(id) }
+    });
+
+    res.json({ message: 'Deletado com sucesso' });
+  } catch (error) {
+    console.error("Erro ao deletar:", error);
+    res.status(500).json({ error: 'Erro ao deletar.' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
