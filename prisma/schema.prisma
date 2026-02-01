@@ -10,7 +10,7 @@ datasource db {
 model Candidato {
   id                    Int      @id @default(autoincrement())
   nome                  String
-  whatsapp              String
+  whatsapp              String?
   cidade_bairro         String
   idade                 String
   instagram             String?
