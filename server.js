@@ -40,7 +40,7 @@ app.post('/api/candidatos', async (req, res) => {
     const dados = req.body;
 
     // 1. Validação Manual de Campos Obrigatórios
-    const camposObrigatorios = ['nome', 'cidade_bairro', 'idade', 'valor_investimento', 'restricao_cpf', 'disponivel_contrato'];
+    const camposObrigatorios = ['nome', 'whatsapp', 'cidade_bairro', 'idade', 'valor_investimento', 'restricao_cpf', 'disponivel_contrato'];
     const camposFaltantes = camposObrigatorios.filter(campo => !dados[campo]);
 
     if (camposFaltantes.length > 0) {
@@ -53,6 +53,7 @@ app.post('/api/candidatos', async (req, res) => {
     const novoCandidato = await prisma.candidato.create({
       data: {
         nome: dados.nome,
+        whatsapp: dados.whatsapp,
         cidade_bairro: dados.cidade_bairro,
         idade: dados.idade,
         instagram: dados.instagram || null, // Garante nulo se vier vazio
@@ -64,7 +65,7 @@ app.post('/api/candidatos', async (req, res) => {
         disponivel_contrato: dados.disponivel_contrato,
         tem_experiencia: dados.tem_experiencia,
         descricao_experiencia: dados.descricao_experiencia,
-        motivacao: dados.motivacao,
+        motivacao: dados.motivacao || "",
         perfil_socio: dados.perfil_socio,
         aceita_processos: dados.aceita_processos
       }
