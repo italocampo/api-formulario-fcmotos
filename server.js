@@ -10,10 +10,31 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(bodyParser.json());
 
+// Rota de Teste (Raiz)
 app.get('/', (req, res) => {
   res.send('API da FC Motos está rodando! 🏍️');
 });
 
+// =====================================================
+// NOVA ROTA: PEGAR TODOS OS CANDIDATOS (PARA O DASHBOARD)
+// =====================================================
+app.get('/api/candidatos', async (req, res) => {
+  try {
+    const listaCandidatos = await prisma.candidato.findMany({
+      orderBy: {
+        id: 'desc' // Mostra os cadastros mais recentes primeiro
+      }
+    });
+    res.json(listaCandidatos);
+  } catch (error) {
+    console.error("Erro ao buscar lista:", error);
+    res.status(500).json({ error: 'Erro ao buscar candidatos.' });
+  }
+});
+
+// =====================================================
+// ROTA ANTIGA: CRIAR CANDIDATO (PARA O FORMULÁRIO)
+// =====================================================
 app.post('/api/candidatos', async (req, res) => {
   try {
     const dados = req.body;
